@@ -1,0 +1,22 @@
+# ninja log v6
+3189	4136	1731880663751462324	MGE_CLion	c81324cdb5694abe
+224	1951	7542323578778407	CMakeFiles/MGE_CLion.dir/mge/core/Texture.cpp.obj	d0fd6378a19ef07c
+54	339	7542323577066617	CMakeFiles/MGE_CLion.dir/mge/behaviours/AbstractBehaviour.cpp.obj	e2d7478326899da4
+206	1804	7542323578582647	CMakeFiles/MGE_CLion.dir/mge/core/ShaderProgram.cpp.obj	50fd392015af51e9
+76	3902	7542324728544682	CMakeFiles/MGE_CLion.dir/mge/behaviours/RotatingBehaviour.cpp.obj	4369d18ee0cee456
+95	4806	7542324728737035	CMakeFiles/MGE_CLion.dir/mge/core/AbstractGame.cpp.obj	5d5f8b9859651736
+114	3962	7542324728927640	CMakeFiles/MGE_CLion.dir/mge/core/Camera.cpp.obj	243814eed86f771c
+235	3930	7542324730130956	CMakeFiles/MGE_CLion.dir/mge/materials/AbstractMaterial.cpp.obj	898bee0f5cf4c647
+62	3951	7542324728401893	CMakeFiles/MGE_CLion.dir/mge/behaviours/KeysBehaviour.cpp.obj	b713ecb2b04adab8
+153	3965	7542324729320307	CMakeFiles/MGE_CLion.dir/mge/core/Light.cpp.obj	464138a4ff64a4b6
+214	4144	7542324729924772	CMakeFiles/MGE_CLion.dir/mge/core/World.cpp.obj	222e1cbf881920d8
+253	4243	7542324730307745	CMakeFiles/MGE_CLion.dir/mge/materials/ColorMaterial.cpp.obj	5c1bf8071aeb8254
+134	4286	7542324729129012	CMakeFiles/MGE_CLion.dir/mge/core/GameObject.cpp.obj	59123bcf12bf79c6
+190	4402	7542324729683526	CMakeFiles/MGE_CLion.dir/mge/core/Renderer.cpp.obj	762d5da61a70a138
+297	4456	7542324730756141	CMakeFiles/MGE_CLion.dir/mge/materials/TextureMaterial.cpp.obj	34f3f32f411f755a
+278	4474	7542324730561049	CMakeFiles/MGE_CLion.dir/mge/materials/LightMaterial.cpp.obj	4dbd7fe6ecd7cdb0
+47	4770	7542324728250846	CMakeFiles/MGE_CLion.dir/mge/MGEDemo.cpp.obj	709e330b55e599cd
+172	4959	7542324729509494	CMakeFiles/MGE_CLion.dir/mge/core/Mesh.cpp.obj	bcfd6310b2059e4
+3931	5650	7542324767088728	CMakeFiles/MGE_CLion.dir/main.cpp.obj	1b776dcb9ce1f053
+3910	5827	7542324766888758	CMakeFiles/MGE_CLion.dir/mge/util/DebugHud.cpp.obj	bdf2a6d03abfc338
+7	1129	7542326437083266	build.ninja	434c6bd441a5c6d3

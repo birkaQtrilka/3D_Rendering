@@ -1,0 +1,3 @@
+C:/Saxion/Courses/3dRendering/MGE_CLion/cmake-build-debug/CMakeFiles/MGE_CLion.dir
+C:/Saxion/Courses/3dRendering/MGE_CLion/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Saxion/Courses/3dRendering/MGE_CLion/cmake-build-debug/CMakeFiles/rebuild_cache.dir
