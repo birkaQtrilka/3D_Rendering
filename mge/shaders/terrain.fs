@@ -24,9 +24,14 @@ uniform vec4 viewerPosV;
 uniform float specularIntensity;
 uniform float specularPower;
 
+uniform mat4 mMatrix;
+uniform float maxHeight;
+
+uniform sampler2D heightMap;
+
 in vec2 texCoord;
 in vec4 vertexWorldPos;
-in vec4 fNormal;
+//in vec4 fNormal;
 
 out vec4 fragment_color;
 
@@ -57,7 +62,20 @@ void main( void ) {
     t += texture(diffuseTexture2,texCoord) * splatValue.b;
     t += texture(diffuseTexture3,texCoord) * splatValue.a;
 
-	vec3 norm = normalize(vec3(fNormal));
+    ivec2 texSize = textureSize(heightMap, 0);
+    vec2 texelSize = 1.0f / vec2(texSize);
+    float heightUp = texture(heightMap,texCoord + vec2(0,texelSize.y)).x * maxHeight;
+    float heightDown = texture(heightMap,texCoord - vec2(0,texelSize.y)).x * maxHeight;
+    float heightRight = texture(heightMap,texCoord + vec2(texelSize.x,0)).x * maxHeight;
+    float heightLeft = texture(heightMap,texCoord - vec2(texelSize.x,0)).x * maxHeight;
+
+    //calulating normal
+    float dist = .1f;
+    vec3 axisA = vec3(0.0f, heightUp,dist) - vec3(0, heightDown,-dist) ;
+    vec3 axisB = vec3(dist, heightRight,0.0f) - vec3(-dist, heightLeft,0.0f);
+
+
+	vec3 norm =  normalize(vec3( mMatrix * vec4(cross(axisA,axisB),0)) );
     vec3 fragPos = vec3(vertexWorldPos);
     vec4 totalLights = CalcDirLight(directionalLight, norm, fragPos);
 
