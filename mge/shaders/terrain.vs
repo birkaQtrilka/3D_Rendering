@@ -13,12 +13,13 @@ uniform sampler2D heightMap;
 
 out vec2 texCoord;
 out vec4 vertexWorldPos;
+out vec4 fLocalPos;
 
 void main( void ){
     float heightCurrent = texture(heightMap,uv).x * maxHeight;
 
     vec4 vertexLocalPos = vec4(vertex + vec3(0.0f,heightCurrent,0.0f), 1.f);
-
+    fLocalPos = vertexLocalPos;
 	texCoord = uv;
 	vertexWorldPos = mMatrix * vertexLocalPos;
     //fNormal = mMatrix * vec4(normalize(cross(axisA,axisB)),0.0f);

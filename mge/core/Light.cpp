@@ -8,7 +8,7 @@ Color(glm::vec3(1.0f, 1.0f, 1.0f)), Intensity(1)
 Light::~Light() {
 }
 
-float Light::_ambientIntensity = .9f;
+float Light::_ambientIntensity = .1f;
 glm::vec3 Light::_ambientColor = glm::vec3(.2, .2, .2);
 
 float Light::GetAmbientIntensity() {

@@ -31,9 +31,19 @@ uniform sampler2D heightMap;
 
 in vec2 texCoord;
 in vec4 vertexWorldPos;
-//in vec4 fNormal;
+in vec4 fLocalPos;
 
 out vec4 fragment_color;
+
+vec4 Triplanar(sampler2D tex, vec4 coord, vec3 norm)
+{
+    vec4 result = vec4(0);
+
+    result += texture(tex, coord.yz ) * max(-norm.x, norm.x);
+    result += texture(tex, coord.zx)* max(-norm.y, norm.y);
+    result += texture(tex, coord.xy)* max(-norm.z, norm.z);
+    return result;
+}
 
 vec4 CalcDirLight(DirectionalLight light, vec3 norm, vec3 fragPos)
 {
@@ -49,19 +59,6 @@ vec4 CalcDirLight(DirectionalLight light, vec3 norm, vec3 fragPos)
 }
 
 void main( void ) {
-    vec4 t = vec4(0,0,0,1); //+ vec4(diffuseColor,0)
-    vec4 splatValue = texture(splatMap, texCoord);
-    //t += texture(diffuseTexture0,texCoord) * (1-splatValue.a);
-    //t = vec4(splatValue.a);
-    //g is sand
-    //r is grass
-    //b is rock
-    //a is snow
-    t += texture(diffuseTexture0,texCoord) * splatValue.r;
-    t += texture(diffuseTexture1,texCoord) * splatValue.g;
-    t += texture(diffuseTexture2,texCoord) * splatValue.b;
-    t += texture(diffuseTexture3,texCoord) * splatValue.a;
-
     ivec2 texSize = textureSize(heightMap, 0);
     vec2 texelSize = 1.0f / vec2(texSize);
     float heightUp = texture(heightMap,texCoord + vec2(0,texelSize.y)).x * maxHeight;
@@ -78,6 +75,19 @@ void main( void ) {
 	vec3 norm =  normalize(vec3( mMatrix * vec4(cross(axisA,axisB),0)) );
     vec3 fragPos = vec3(vertexWorldPos);
     vec4 totalLights = CalcDirLight(directionalLight, norm, fragPos);
+
+    vec4 splatValue = texture(splatMap, texCoord);
+    //t = vec4(splatValue.a);
+    //g is sand
+    //r is grass
+    //b is rock
+    //a is snow
+    vec4 t = vec4(0,0,0,1);
+    t += Triplanar(diffuseTexture0, fLocalPos, norm) * splatValue.r;
+    t += Triplanar(diffuseTexture1, fLocalPos, norm) * splatValue.g;
+    t += Triplanar(diffuseTexture2, fLocalPos, norm) * splatValue.b;
+    t += Triplanar(diffuseTexture3, fLocalPos, norm) * (1 - splatValue.a);
+
 
 	fragment_color = t * totalLights;
 }
