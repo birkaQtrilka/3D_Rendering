@@ -39,9 +39,9 @@ vec4 Triplanar(sampler2D tex, vec4 coord, vec3 norm)
 {
     vec4 result = vec4(0);
 
-    result += texture(tex, coord.yz ) * max(-norm.x, norm.x);
-    result += texture(tex, coord.zx)* max(-norm.y, norm.y);
-    result += texture(tex, coord.xy)* max(-norm.z, norm.z);
+    result += texture(tex, coord.yz)* abs(dot(vec3(1.0f,0.0f,0.0f), norm));
+    result += texture(tex, coord.zx)* abs(dot(vec3(0.0f,1.0f,0.0f), norm));
+    result += texture(tex, coord.xy)* abs(dot(vec3(0.0f,0.0f,1.0f), norm));
     return result;
 }
 

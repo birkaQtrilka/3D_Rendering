@@ -20,6 +20,7 @@
 #include "MGEDemo.hpp" //
 
 #include "behaviours/Follow.h"
+#include "MyClasses/DayAndNight.h"
 #include "MyClasses/DirectionalLight.h"
 #include "MyClasses/PointLight.h"
 #include "MyClasses/SinMove.h"
@@ -63,12 +64,19 @@ void TerrainScene::_initializeScene()
 
     ColorMaterial* whiteCol = new ColorMaterial (glm::vec3(1,.2f,0));
     OceanMat* oceanMat = new OceanMat (glm::vec3(0,1.0f,1.0f));
-
+    oceanMat->WaveSpeed = 1.0f;
     DirectionalLight* dirLight = new DirectionalLight(
             "dirLight",
             glm::vec3(-3,1,5),
             glm::vec3(-2,1,0)
         );
+    dirLight->setBehaviour(new DayAndNight(
+        *dirLight,
+        glm::vec3(1,0,0),
+        glm::vec3(0.984f,0.647f,0.094f),
+        glm::vec3(1,1,1))
+    );
+
     dirLight->scale(glm::vec3(.1f, .1, .1));
     dirLight->setMesh(cubeMeshF);
     dirLight->setMaterial(whiteCol);
@@ -77,7 +85,7 @@ void TerrainScene::_initializeScene()
     _world->add(dirLight);
 
     GameObject* floor = new GameObject ("floor", glm::vec3(0,-1,0));
-    floor->setBehaviour(new RotatingBehaviour());
+    //floor->setBehaviour(new RotatingBehaviour());
     floor->scale(glm::vec3(2.5f,1,2.5f));
     floor->setMesh (floorMesh);
     floor->setMaterial(terrainMat);
@@ -85,8 +93,8 @@ void TerrainScene::_initializeScene()
 
     GameObject* water = new GameObject ("water", glm::vec3(0,0.8,0));
     //water->rotate(20,glm::vec3(0,1,0));
-    water->setBehaviour(new RotatingBehaviour());
-    //water->scale(glm::vec3(25.0f,1,25.0f));
+    //water->setBehaviour(new RotatingBehaviour());
+    water->scale(glm::vec3(25.0f,25.0f,25.0f));
     water->scale(glm::vec3(1.0f,1.0,1.0f));
     water->setMesh (waterMesh);
     water->setMaterial(oceanMat);

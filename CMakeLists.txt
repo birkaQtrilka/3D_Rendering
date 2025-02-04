@@ -26,7 +26,9 @@ add_executable(MGE_CLion ${SOURCE_FILES} ${SOURCES}
         mge/TerrainScene.cpp
         mge/TerrainScene.h
         mge/MyClasses/Materials/OceanMat.cpp
-        mge/MyClasses/Materials/OceanMat.h)
+        mge/MyClasses/Materials/OceanMat.h
+        mge/MyClasses/DayAndNight.cpp
+        mge/MyClasses/DayAndNight.h)
 
 find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
 target_link_libraries(MGE_CLion PRIVATE sfml-system sfml-network sfml-graphics sfml-window)

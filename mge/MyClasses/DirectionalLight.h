@@ -11,7 +11,10 @@
 class DirectionalLight : public Light{
 public:
     DirectionalLight(const std::string& pName, const glm::vec3& pPosition,const glm::vec3 &direction);
-    ~DirectionalLight();
+
+    DirectionalLight();
+
+    ~DirectionalLight() override;
     glm::vec3 Direction;
 };
 

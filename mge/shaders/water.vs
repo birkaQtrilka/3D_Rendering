@@ -19,7 +19,7 @@ out vec2 texCoord;
 out vec4 vertexWorldPos;
 out vec3 vertexLocalPos;
 
-vec3 GetPos(vec3 pos)
+vec4 GetPos(vec4 pos)
 {
     float speed = waveSpeed;
     float hz = 2.0f * 3.14159f / waveLength;
@@ -36,9 +36,8 @@ vec3 GetPos(vec3 pos)
 }
 
 void main( void ){
-    vertexLocalPos = GetPos(vertex);
-
+    vertexWorldPos = GetPos(mMatrix *  vec4(vertex, 1.0f) );
 	texCoord = uv;
-	vertexWorldPos = mMatrix * vec4(vertexLocalPos,1.0f);
+	vertexLocalPos = vec3( inverse(mMatrix) * vertexWorldPos );
 	gl_Position = mvpMatrix *  vec4(vertexLocalPos,1.0f);
 }

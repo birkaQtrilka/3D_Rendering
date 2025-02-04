@@ -10,4 +10,9 @@ DirectionalLight::DirectionalLight(const std::string &pName, const glm::vec3 &pP
 
 }
 
+DirectionalLight::DirectionalLight(): Light("DirLight", glm::vec3(0, 0, 0)),
+Direction(glm::vec3(1, 0, 0))
+{
+}
+
 DirectionalLight::~DirectionalLight() = default;

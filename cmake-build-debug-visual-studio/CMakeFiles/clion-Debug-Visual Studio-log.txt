@@ -1,5 +1,5 @@
 "C:\Program Files\JetBrains\CLion 2024.3\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_MAKE_PROGRAM=C:/Program Files/JetBrains/CLion 2024.3/bin/ninja/win/x64/ninja.exe" -DCMAKE_TOOLCHAIN_FILE=C:\Saxion\Courses\C++\vcpkg\scripts\buildsystems\vcpkg.cmake -G Ninja -S C:\Saxion\Courses\3dRendering\MGE_CLion -B C:\Saxion\Courses\3dRendering\MGE_CLion\cmake-build-debug-visual-studio
 -- Found SFML 2.6.1 in C:/Saxion/Courses/C++/vcpkg/installed/x64-windows/share/sfml
--- Configuring done (2.0s)
+-- Configuring done (1.6s)
 -- Generating done (0.1s)
 -- Build files have been written to: C:/Saxion/Courses/3dRendering/MGE_CLion/cmake-build-debug-visual-studio
