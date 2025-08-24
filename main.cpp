@@ -8,8 +8,8 @@ int main()
 {
     std::cout << "Starting Game" << std::endl;
 
-    //AbstractGame* game = new MGEDemo();
-    AbstractGame* game = new TerrainScene();
+    AbstractGame* game = new MGEDemo();
+    //AbstractGame* game = new TerrainScene();
     game->initialize();
     game->run();
 

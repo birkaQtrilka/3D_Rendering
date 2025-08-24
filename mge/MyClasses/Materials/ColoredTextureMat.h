@@ -9,6 +9,8 @@
 #include <glm/fwd.hpp>
 #include <vector>
 #include "../../materials/AbstractMaterial.hpp"
+class DirectionalLight;
+class SpotLight;
 class PointLight;
 class ShaderProgram;
 class Texture;
@@ -21,6 +23,9 @@ public:
     virtual void render(World* pWorld, Mesh* pMesh, const glm::mat4& pModelMatrix, const glm::mat4& pViewMatrix, const glm::mat4& pProjectionMatrix) override;
     void AddPointLight(PointLight* pPointLight);
     void setDiffuseColor (glm::vec3 pDiffuseColor);
+    void RenderSpotLight(const SpotLight *l);
+    void RenderDirectionalLight(const DirectionalLight *dl);
+
     float SpecularIntensity;
     float SpecularPower;
 private:
@@ -28,11 +33,11 @@ private:
     //note that they are all PRIVATE, we do not expose this static info to the outside world
     int _prevLightCount;
 
-    void OnLigthAdded();
     static ShaderProgram* _shader;
     static void _lazyInitializeShader();
 
-    static std::vector<float> _lightData;
+    static std::vector<float> _pointLightData;
+    static std::vector<float> _spotLightData;
     //this one is unique per instance of color material
     glm::vec3 _diffuseColor;
     Texture* _diffuseTexture;
@@ -45,7 +50,8 @@ private:
     static GLint _aUV ;
 
     static GLint _uMMatrix;
-    static GLuint _lightBuffer;
+    static GLuint _pointLightBufferID;
+    static GLuint _spotLightBufferID;
 };
 
 

@@ -4,7 +4,7 @@
 
 #ifndef DAYANDNIGHT_H
 #define DAYANDNIGHT_H
-#include <glm/vec3.hpp>
+
 
 #include "DirectionalLight.h"
 #include "../behaviours/AbstractBehaviour.hpp"

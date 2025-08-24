@@ -11,9 +11,11 @@ uniform float specularIntensity;
 uniform float specularPower;
 
 uniform int lightCount;
+uniform int spotLightCount;
 
 struct PointLight
 {
+  //grouping together to minimize unused memory from padding
   vec4 posAndIntensity;
   vec4 clrAndAttenuation;
 };
@@ -25,8 +27,19 @@ struct DirectionalLight
     vec3 direction;
 };
 
+struct SpotLight
+{
+    vec4 position_cutoffAngle;
+    vec4 direction_intensity;
+    vec4 color_attenuation;
+};
+
 layout(std140, binding=1) uniform LightingBlock {
   PointLight lights [100];
+};
+
+layout(std140, binding=2) uniform SpotLightBlock {
+  SpotLight  spotLights [100];
 };
 
 uniform DirectionalLight directionalLight;
@@ -75,6 +88,38 @@ vec4 CalcPointLight(PointLight light, vec3 norm, vec3 fragPos)
     return vec4(diffuseMath + ambient + specular, 1);
 }
 
+vec4 CalcSpotLight(SpotLight light, vec3 norm, vec3 fragPos)
+{
+    vec3 lightPos = vec3(light.position_cutoffAngle);
+    float cutOff = light.position_cutoffAngle.a;
+    vec3 direction = vec3(light.direction_intensity);
+    float intensity = light.direction_intensity.a;
+    vec3 color = vec3(light.color_attenuation);
+    float attenuation = light.color_attenuation.a;
+
+  	vec3 lightDir = normalize(lightPos - fragPos);
+
+    float theta = dot(lightDir, normalize(-direction));
+    //ambient
+    vec3 ambient = ambientClr * ambientIntensity;
+    vec3 diffuseMath;
+    vec3 specular;
+
+    if(theta > cutOff)
+    {
+        //diffuse
+ 	    diffuseMath = max( dot(norm, lightDir ) , 0) * intensity * color;
+ 	    float distance = max(distance(lightPos, fragPos),0.001f);
+        diffuseMath /=  attenuation * distance;
+
+        //specular
+        vec3 viewDir = normalize(vec3(viewerPosV) - fragPos);
+        vec3 reflection = reflect(-lightDir, norm);
+        specular = pow(max( dot(viewDir, reflection),0.0f), specularPower) * color  * specularIntensity;
+    }
+    return vec4(diffuseMath + ambient + specular, 1);
+}
+
 void main( void ) {
 	vec4 texture = texture(diffuseTexture,texCoord) + vec4(diffuseColor,0);
 	vec3 norm = normalize(vec3(fNormal));
@@ -85,7 +130,10 @@ void main( void ) {
     {
         totalLights += CalcPointLight(lights[i],norm,fragPos);
     }
-
+    for(int i = 0; i < spotLightCount; i++)
+    {
+        totalLights += CalcSpotLight(spotLights[i],norm,fragPos);
+    }
 	fragment_color = texture * totalLights;
 }
 

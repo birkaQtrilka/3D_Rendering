@@ -24,6 +24,7 @@
 #include "MyClasses/PointLight.h"
 #include "MyClasses/SinMove.h"
 #include "MyClasses/Materials/ColoredTextureMat.h"
+#include "MyClasses/SpotLight.h"
 #include "MyClasses/Materials/TerrainMat.h"
 
 //construct the game class into _window, _renderer and hud (other parts are initialized by build)
@@ -98,6 +99,15 @@ void MGEDemo::_initializeScene()
     _world->add(camera);
     _world->setMainCamera(camera);
 
+    // SpotLight* spot_light = new SpotLight(
+    //     "spotLight",
+    //     glm::vec3(10,1,1),
+    //     glm::vec3(0,-1,0),
+    //     2,
+    //     2);
+    // spot_light->Color = glm::vec3(1,1,0);
+    //
+    // _world->add(spot_light);
 
     PointLight* light = new PointLight("light", glm::vec3(0,1,10),2);
     light->scale(glm::vec3(.1f, .1, .1));
