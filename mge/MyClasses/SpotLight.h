@@ -14,17 +14,21 @@ public:
         const glm::vec3& pPosition,
         glm::vec3 direction,
         float linearAttenuation,
-        float cutoffAngleRad
+        float cutoffAngleRad,
+        float innerCutoffAngleRad
     );
     float GetLinearAttenuation() const;
     float GetCutoffAngleRadians() const;
+    float GetInnerCutoffAngleRadians() const;
     glm::vec3 GetDirection() const;
 
     ~SpotLight();
 private:
     float _linearAttenuation;
     float _cutoffAngleRad;
+    float _innerCutoffAngleRad;
     glm::vec3 _direction{};
+
 };
 
 

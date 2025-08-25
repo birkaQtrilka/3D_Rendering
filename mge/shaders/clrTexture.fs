@@ -32,6 +32,7 @@ struct SpotLight
     vec4 position_cutoffAngle;
     vec4 direction_intensity;
     vec4 color_attenuation;
+    vec4 innerCutoff_padding;
 };
 
 layout(std140, binding=1) uniform LightingBlock {
@@ -96,10 +97,14 @@ vec4 CalcSpotLight(SpotLight light, vec3 norm, vec3 fragPos)
     float intensity = light.direction_intensity.a;
     vec3 color = vec3(light.color_attenuation);
     float attenuation = light.color_attenuation.a;
+    float innerCutoff = light.innerCutoff_padding.r;
 
   	vec3 lightDir = normalize(lightPos - fragPos);
 
     float theta = dot(lightDir, normalize(-direction));
+    float epsilon  = innerCutoff - cutOff;
+    float transition = clamp((theta - innerCutoff) / epsilon, 0.0, 1.0);
+
     //ambient
     vec3 ambient = ambientClr * ambientIntensity;
     vec3 diffuseMath;
@@ -111,11 +116,13 @@ vec4 CalcSpotLight(SpotLight light, vec3 norm, vec3 fragPos)
  	    diffuseMath = max( dot(norm, lightDir ) , 0) * intensity * color;
  	    float distance = max(distance(lightPos, fragPos),0.001f);
         diffuseMath /=  attenuation * distance;
+        diffuseMath *= transition;
 
         //specular
         vec3 viewDir = normalize(vec3(viewerPosV) - fragPos);
         vec3 reflection = reflect(-lightDir, norm);
         specular = pow(max( dot(viewDir, reflection),0.0f), specularPower) * color  * specularIntensity;
+        specular *= transition;
     }
     return vec4(diffuseMath + ambient + specular, 1);
 }

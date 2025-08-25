@@ -81,7 +81,7 @@ void ColoredTextureMat::_lazyInitializeShader()
 
     glGenBuffers(1, &_spotLightBufferID);
     glBindBuffer(GL_UNIFORM_BUFFER, _spotLightBufferID);
-    glBufferData(GL_UNIFORM_BUFFER, MAX_SPOT_LIGHTS * sizeof(glm::vec4) * 3, nullptr, GL_DYNAMIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, MAX_SPOT_LIGHTS * sizeof(glm::vec4) * 4, nullptr, GL_DYNAMIC_DRAW);
 
 }
 
@@ -195,8 +195,12 @@ void ColoredTextureMat::RenderSpotLight(const SpotLight *l)
 
     //attenuation
     _spotLightData.push_back(l->GetLinearAttenuation());
-    //what is magic number 1?
 
+    _spotLightData.push_back(l->GetInnerCutoffAngleRadians());
+    //padding
+    _spotLightData.push_back(0);
+    _spotLightData.push_back(0);
+    _spotLightData.push_back(0);
 }
 
 void ColoredTextureMat::RenderDirectionalLight(const DirectionalLight *pDir) {

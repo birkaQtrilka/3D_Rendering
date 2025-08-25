@@ -104,7 +104,9 @@ void MGEDemo::_initializeScene()
         glm::vec3(10,2,1),
         glm::vec3(0,-1,0),
         2,
-        1);
+        0.91,
+        0.81f);
+
     spot_light->Color = glm::vec3(1,1,0);
     spot_light->Intensity = 5;
     _world->add(spot_light);

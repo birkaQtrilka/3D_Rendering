@@ -9,12 +9,16 @@ SpotLight::SpotLight(
     const glm::vec3 &pPosition,
     glm::vec3 direction,
     float linearAttenuation,
-    float cutoffAngleRad
+    float cutoffAngleRad,
+    float innerCutoffAngleRad
     ) : Light(pName, pPosition)
 {
     _direction = glm::normalize(direction);
     _linearAttenuation = linearAttenuation;
     _cutoffAngleRad = cutoffAngleRad;
+    _innerCutoffAngleRad = innerCutoffAngleRad;
+    // _cutoffAngleRad = glm::fmax(0, cutoffAngleRad);
+    // _innerCutoffAngleRad = glm::min(innerCutoffAngleRad, _cutoffAngleRad);
 }
 
 float SpotLight::GetLinearAttenuation() const {
@@ -23,6 +27,10 @@ float SpotLight::GetLinearAttenuation() const {
 
 float SpotLight::GetCutoffAngleRadians() const {
     return _cutoffAngleRad;
+}
+
+float SpotLight::GetInnerCutoffAngleRadians() const {
+    return _innerCutoffAngleRad;
 }
 
 glm::vec3 SpotLight::GetDirection() const {
