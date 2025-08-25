@@ -91,17 +91,17 @@ void TerrainMat::render(World *pWorld, Mesh *pMesh, const glm::mat4 &pModelMatri
     _shader->use();
     
     if (pWorld->getLightCount() != 0) {
-        Light *light = pWorld->getLightAt(0);
+        Light& light = pWorld->getLightAt(0);
 
         glm::vec3 ambientClr = Light::GetAmbientColor();
-        glm::vec3 viewerPos = pWorld->getMainCamera()->getWorldPosition();
+        glm::vec3 viewerPos = pWorld->getMainCamera().getWorldPosition();
         glUniform3f(_shader->getUniformLocation("ambientClr"), ambientClr.x, ambientClr.y, ambientClr.z);
         glUniform1f(_shader->getUniformLocation("ambientIntensity"), Light::GetAmbientIntensity());
         glUniform4f(_shader->getUniformLocation("viewerPosV"), viewerPos.x, viewerPos.y, viewerPos.z, 1);
         glUniform1f(_shader->getUniformLocation("specularIntensity"),_specularIntensity);
         glUniform1f(_shader->getUniformLocation("specularPower"),_specularPower);
 
-        auto dirLight = dynamic_cast<DirectionalLight*>(light);
+        auto dirLight = dynamic_cast<DirectionalLight*>(&light);
         glUniform3f(_shader->getUniformLocation("directionalLight.direction"),
                     dirLight->Direction.x,
                     dirLight->Direction.y,

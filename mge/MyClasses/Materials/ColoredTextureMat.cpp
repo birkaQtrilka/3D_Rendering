@@ -142,7 +142,7 @@ void ColoredTextureMat::render(
 
     if (pWorld->getLightCount() != 0) {
         glm::vec3 ambientClr = Light::GetAmbientColor();
-        glm::vec3 viewerPos = pWorld->getMainCamera()->getWorldPosition();
+        glm::vec3 viewerPos = pWorld->getMainCamera().getWorldPosition();
         if (_uAmbientClr != -1) glUniform3f(_uAmbientClr, ambientClr.x, ambientClr.y, ambientClr.z);
         if (_uAmbientIntensity != -1) glUniform1f(_uAmbientIntensity, Light::GetAmbientIntensity());
         if (_uViewerPosV != -1) glUniform4f(_uViewerPosV, viewerPos.x, viewerPos.y, viewerPos.z, 1);
@@ -151,7 +151,7 @@ void ColoredTextureMat::render(
 
         for (int i = 0; i < pWorld->getLightCount(); i++)
         {
-            Light* light = pWorld->getLightAt(i);
+            Light* light = &pWorld->getLightAt(i);
 
             if (auto pPoint = dynamic_cast<PointLight*>(light)) {
                 AddPointLight(pPoint);

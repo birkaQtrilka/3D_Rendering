@@ -56,7 +56,7 @@ void MGEDemo::_initializeScene()
     //MATERIALS
     // AbstractMaterial* brickMat = new ColoredTextureMat (Texture::load (config::MGE_TEXTURE_PATH+"bricks.jpg"),
     //     glm::vec3(.2,.2,0));
-     ColoredTextureMat* bananaMat = new ColoredTextureMat (Texture::load (config::MGE_TEXTURE_PATH+"Banana skin texture.jpg"),
+    ColoredTextureMat* bananaMat = new ColoredTextureMat (Texture::load (config::MGE_TEXTURE_PATH+"Banana skin texture.jpg"),
          glm::vec3(.1f,0.1f,0));
     ColoredTextureMat* defaultMat = new ColoredTextureMat (nullptr,
          glm::vec3(.1f,0.1f,0));

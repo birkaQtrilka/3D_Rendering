@@ -42,9 +42,9 @@ void Renderer::render(World& pWorld) {
 	render(pWorld, pWorld, nullptr, pWorld.getMainCamera(), true);
 }
 
-void Renderer::render(World& pWorld, GameObject& pGameObject, AbstractMaterial* pMaterial, Camera* pCamera, bool pRecursive)
+void Renderer::render(World& pWorld, GameObject& pGameObject, AbstractMaterial* pMaterial, Camera& pCamera, bool pRecursive)
 {
-	render(pWorld, pGameObject, pMaterial, pGameObject.getWorldTransform(), glm::inverse(pCamera->getWorldTransform()), pCamera->getProjection(), pRecursive);
+	render(pWorld, pGameObject, pMaterial, pGameObject.getWorldTransform(), glm::inverse(pCamera.getWorldTransform()), pCamera.getProjection(), pRecursive);
 }
 
 void Renderer::render(World& pWorld, GameObject& pGameObject, AbstractMaterial* pMaterial, const glm::mat4& pModelMatrix, const glm::mat4& pViewMatrix, const glm::mat4& pProjectionMatrix, bool pRecursive) {
