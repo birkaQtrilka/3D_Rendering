@@ -37,8 +37,10 @@ std::vector<float> ColoredTextureMat::_pointLightData;
 std::vector<float> ColoredTextureMat::_spotLightData;
 GLuint ColoredTextureMat::_pointLightBufferID = 0;
 GLuint ColoredTextureMat::_spotLightBufferID = 0;
-
 ShaderProgram *ColoredTextureMat::_shader = NULL;
+
+constexpr int MAX_POINT_LIGHTS = 100;
+constexpr int MAX_SPOT_LIGHTS = 100;
 
 ColoredTextureMat::ColoredTextureMat(
     Texture *pDiffuseTexture, glm::vec3 pDiffuseColor):
@@ -73,13 +75,16 @@ void ColoredTextureMat::_lazyInitializeShader()
     _aUV = _shader->getAttribLocation("uv");
 
     glGenBuffers(1, &_pointLightBufferID);
+
     glBindBuffer(GL_UNIFORM_BUFFER, _pointLightBufferID);
-    glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(float) * 8, _pointLightData.begin()._Ptr, GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, MAX_POINT_LIGHTS * sizeof(glm::vec4) * 2, nullptr, GL_DYNAMIC_DRAW);
 
     glGenBuffers(1, &_spotLightBufferID);
     glBindBuffer(GL_UNIFORM_BUFFER, _spotLightBufferID);
-    glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(float) * 12, _spotLightData.begin()._Ptr, GL_STATIC_DRAW);
+    glBufferData(GL_UNIFORM_BUFFER, MAX_SPOT_LIGHTS * sizeof(glm::vec4) * 3, nullptr, GL_DYNAMIC_DRAW);
+
 }
+
 
 void ColoredTextureMat::setDiffuseColor(glm::vec3 pDiffuseColor) {
     _diffuseColor = pDiffuseColor;
@@ -134,9 +139,10 @@ void ColoredTextureMat::render(
         glUniform1i(_shader->getUniformLocation("spotLightCount"), _spotLightData.size() / 12);
 
         //is doing this every frame a good idea?
-        glBufferSubData(GL_UNIFORM_BUFFER, 0, _pointLightData.size() * sizeof(float), _pointLightData.begin()._Ptr);
-        //what is magic number 0?
-        glBufferSubData(GL_UNIFORM_BUFFER, 0, _spotLightData.size() * sizeof(float), _spotLightData.begin()._Ptr);
+        glBindBufferBase(GL_UNIFORM_BUFFER, 1, _pointLightBufferID);
+        glBufferSubData(GL_UNIFORM_BUFFER, 0, _pointLightData.size() * sizeof(float), _pointLightData.data());
+        glBindBufferBase(GL_UNIFORM_BUFFER, 2, _spotLightBufferID);
+        glBufferSubData(GL_UNIFORM_BUFFER, 0, _spotLightData.size() * sizeof(float), _spotLightData.data());
     }
 
     glUniform3f(_shader->getUniformLocation("diffuseColor"),
@@ -171,7 +177,7 @@ void ColoredTextureMat::RenderSpotLight(const SpotLight *l)
     _spotLightData.push_back(pos.y);
     _spotLightData.push_back(pos.z);
     //cutoff
-    _spotLightData.push_back(l->GetCutoffAngleRadians());
+    _spotLightData.push_back(glm::cos(l->GetCutoffAngleRadians()));
 
     //dir
     _spotLightData.push_back(l->GetDirection().x);
@@ -190,7 +196,6 @@ void ColoredTextureMat::RenderSpotLight(const SpotLight *l)
     //attenuation
     _spotLightData.push_back(l->GetLinearAttenuation());
     //what is magic number 1?
-    glBindBufferBase(GL_UNIFORM_BUFFER, 2, _spotLightBufferID);
 
 }
 
@@ -224,5 +229,4 @@ void ColoredTextureMat::AddPointLight(PointLight *l) {
     _pointLightData.push_back(clr.b);
     //attenuation
     _pointLightData.push_back(l->getAttenuation());
-    glBindBufferBase(GL_UNIFORM_BUFFER, 1, _pointLightBufferID);
 }
