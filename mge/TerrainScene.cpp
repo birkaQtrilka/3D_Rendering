@@ -70,7 +70,7 @@ void TerrainScene::_initializeScene()
             glm::vec3(-3,1,5),
             glm::vec3(-2,1,0)
         );
-    dirLight->setBehaviour(new DayAndNight(
+    dirLight->setBehaviour(std::make_unique<DayAndNight>(
         *dirLight,
         glm::vec3(1,0,0),
         glm::vec3(0.984f,0.647f,0.094f),
@@ -109,7 +109,7 @@ void TerrainScene::_initializeScene()
     _world->add(cube);
 
     Camera* camera = new Camera ("camera", glm::vec3(0,0,0));
-    camera->setBehaviour (new Follow(30, cube, camera));
+    camera->setBehaviour (std::make_unique<Follow>(30, cube, camera));
     _world->add(camera);
     camera->rotate(0, glm::vec3(1,0,0));
     _world->setMainCamera(camera);

@@ -30,7 +30,9 @@ add_executable(MGE_CLion ${SOURCE_FILES} ${SOURCES}
         mge/MyClasses/DayAndNight.cpp
         mge/MyClasses/DayAndNight.h
         mge/MyClasses/SpotLight.cpp
-        mge/MyClasses/SpotLight.h)
+        mge/MyClasses/SpotLight.h
+        mge/behaviours/RotateDirection.cpp
+        mge/behaviours/RotateDirection.h)
 
 find_package(SFML COMPONENTS system window graphics CONFIG REQUIRED)
 target_link_libraries(MGE_CLion PRIVATE sfml-system sfml-network sfml-graphics sfml-window)

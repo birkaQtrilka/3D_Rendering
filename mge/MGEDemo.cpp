@@ -20,6 +20,7 @@
 #include "MGEDemo.hpp" //
 
 #include "behaviours/Follow.h"
+#include "behaviours/RotateDirection.h"
 #include "MyClasses/DirectionalLight.h"
 #include "MyClasses/PointLight.h"
 #include "MyClasses/SinMove.h"
@@ -45,8 +46,6 @@ void MGEDemo::initialize() {
 //build the game _world
 void MGEDemo::_initializeScene()
 {
-
-
     //Mesh* planeMeshDefault = Mesh::load (config::MGE_MODEL_PATH+"plane.obj");
     Mesh* cubeMeshF = Mesh::load (config::MGE_MODEL_PATH+"cube_flat.obj");
     Mesh* sphereMeshS = Mesh::load (config::MGE_MODEL_PATH+"sphere_smooth.obj");
@@ -64,10 +63,14 @@ void MGEDemo::_initializeScene()
     ColorMaterial* redCol = new ColorMaterial (glm::vec3(1,1,0));
     ColorMaterial* whiteCol = new ColorMaterial (glm::vec3(1,.2f,0));
 
-    ColoredTextureMat* runicLight = new ColoredTextureMat (Texture::load (config::MGE_TEXTURE_PATH+"runicfloor.png"),
-        glm::vec3(0,0,0));
-    ColoredTextureMat* floorMat = new ColoredTextureMat (Texture::load (config::MGE_TEXTURE_PATH+"default.jpg"),
-        glm::vec3(-0.4,-0.4,-0.4));
+    ColoredTextureMat* runicLight = new ColoredTextureMat (
+        Texture::load (config::MGE_TEXTURE_PATH+"runicfloor.png"),
+        glm::vec3(0,0,0)
+    );
+    ColoredTextureMat* floorMat = new ColoredTextureMat (
+        Texture::load (config::MGE_TEXTURE_PATH+"default.jpg"),
+        glm::vec3(-0.4,-0.4,-0.4)
+    );
 
 
     //add a spinning sphere
@@ -75,7 +78,7 @@ void MGEDemo::_initializeScene()
     sphere->scale(glm::vec3(1,1,1));
     sphere->setMesh (sphereMeshS);
     sphere->setMaterial(runicLight);
-    sphere->setBehaviour (new KeysBehaviour(bananaMesh,bananaMat ,bananaMat,10,110));
+    sphere->setBehaviour (std::make_unique<KeysBehaviour>(bananaMesh,bananaMat ,bananaMat,10,110));
     _world->add(sphere);
 
     GameObject* floor = new GameObject ("floor", glm::vec3(0,-2,0));
@@ -95,7 +98,7 @@ void MGEDemo::_initializeScene()
     _world->add(suzanna);
 
     Camera* camera = new Camera ("camera", glm::vec3(0,6,16));
-    camera->setBehaviour (new Follow(5, sphere, camera));
+    camera->setBehaviour (std::make_unique<Follow>(5, sphere, camera));
     _world->add(camera);
     _world->setMainCamera(camera);
 
@@ -108,7 +111,21 @@ void MGEDemo::_initializeScene()
         0.81f);
 
     spot_light->Color = glm::vec3(1,1,0);
-    spot_light->Intensity = 5;
+    spot_light->Intensity = 10;
+    // spot_light->setBehaviour(std::make_unique<SinMove>(
+    //     3,
+    //     .5f,
+    //     glm::vec3(0,1,0),
+    //     glm::vec3(0,0,0)
+    //     //glm::vec3(rand() % 10,rand() % 10,(float)(rand() % 10)),
+    //     //glm::vec3(rand() % 10,rand() % 10,(float)(rand() % 10))
+    //     ));
+    spot_light->setBehaviour(std::make_unique<RotateDirection>(
+        spot_light,
+        1,
+        .5
+        ));
+
     _world->add(spot_light);
 
     PointLight* light = new PointLight("light", glm::vec3(0,1,10),2);
@@ -124,11 +141,13 @@ void MGEDemo::_initializeScene()
     light2->setMesh(cubeMeshF);
     light2->setMaterial(whiteCol);
     light2->Color = whiteCol->GetDiffuseColor();
-    light2->setBehaviour(new SinMove(
+    light2->setBehaviour(std::make_unique<SinMove>(
         3,
         5.0f,
-        glm::vec3(rand() % 10,rand() % 10,(float)(rand() % 10)),
-        glm::vec3(rand() % 10,rand() % 10,(float)(rand() % 10))
+        glm::vec3(0,1,0),
+        glm::vec3(10,0,0)
+        //glm::vec3(rand() % 10,rand() % 10,(float)(rand() % 10)),
+        //glm::vec3(rand() % 10,rand() % 10,(float)(rand() % 10))
         ));
     light2->Intensity = 6.0f;
     _world->add(light2);
@@ -144,48 +163,6 @@ void MGEDemo::_initializeScene()
     dirLight->Color = glm::vec3(1,1,1);
     dirLight->Intensity = 1.0f;
     _world->add(dirLight);
-
-
-    // PointLight* l = new PointLight("l0", glm::vec3(1,1,1),1);
-    // l->scale(glm::vec3(.1f, .1, .1));
-    // l->setMesh(cubeMeshF);
-    // l->setMaterial(whiteCol);
-    // l->Color = whiteCol->GetDiffuseColor();
-    // l->Intensity = 6.0f;
-    // _world->add(l);
-
-    // for (int i = 0; i < 2; i++) {
-    //     float x = rand() % 10;
-    //     float y = rand() % 10;
-    //     float z = rand() % 10;
-
-        // PointLight* l = new PointLight(
-        //     "l" + std::to_string(0),
-        //     glm::vec3(1,1,1),
-        //     1//rand() % 10 + 1
-        // );
-        // float r = (rand() % 100 + 1) / 100.0f; ;
-        // float g = (rand() % 100 + 1) / 100.0f; ;
-        // float b = (rand() % 100 + 1) / 100.0f; ;
-        //std::shared_ptr<ColorMaterial> randC =std::make_shared<ColorMaterial>(glm::vec3(1,1,1));
-        // ColorMaterial* randC = new ColorMaterial (glm::vec3(r,g,b));
-        // _materials.push_back(randC);
-
-        // l->scale(glm::vec3(.1f, .1, .1));
-        // l->setMesh(cubeMeshF);
-        // l->setMaterial(whiteCol);
-        // l->Color = whiteCol->GetDiffuseColor();
-        // l->setBehaviour(new SinMove(
-        //     3,
-        //     5.0f,
-        //     glm::vec3(.1f, .1f, .1f),
-        //     glm::vec3(.1f, .1f, .1f)
-        //     //glm::vec3(rand() % 10,rand() % 10,(float)(rand() % 10)),
-        //     //glm::vec3(rand() % 10,rand() % 10,(float)(rand() % 10))
-        //     ));
-        // l->Intensity = 3.0f;
-        // _world->add(l);
-    //}
 
 }
 

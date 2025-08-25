@@ -34,7 +34,11 @@ float SpotLight::GetInnerCutoffAngleRadians() const {
 }
 
 glm::vec3 SpotLight::GetDirection() const {
-    return _direction;
+    return glm::vec4(_direction,1) ;
+}
+
+void SpotLight::SetDirection(const glm::vec3 direction) {
+    _direction = glm::normalize(direction);
 }
 
 SpotLight::~SpotLight() {

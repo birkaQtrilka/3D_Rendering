@@ -1,10 +1,13 @@
 #include <iostream>
 #include "GameObject.hpp"
+
+// #include "Mesh.hpp"
+// #include "../materials/AbstractMaterial.hpp"
 #include "../behaviours/AbstractBehaviour.hpp"
 
 GameObject::GameObject(const std::string& pName, const glm::vec3& pPosition )
 :	_name( pName ), _transform( glm::translate( pPosition ) ), _parent(nullptr), _children(),
-    _mesh( nullptr ),_behaviour( nullptr ), _material(nullptr), _world(nullptr)
+    _mesh( nullptr ),_behaviours( ), _material(nullptr), _world(nullptr)
 
 {
 }
@@ -19,7 +22,6 @@ GameObject::~GameObject()
         remove (child);
         delete child;
     }
-
     //do not forget to delete behaviour, material, mesh, collider manually if required!
 }
 
@@ -73,15 +75,15 @@ Mesh * GameObject::getMesh() const
     return _mesh;
 }
 
-void GameObject::setBehaviour(AbstractBehaviour* pBehaviour)
+void GameObject::setBehaviour(std::unique_ptr<AbstractBehaviour> pBehaviour)
 {
-	_behaviour = pBehaviour;
-	_behaviour->setOwner(this);
+    _behaviours.push_back(std::move(pBehaviour));
+    _behaviours.back()->setOwner(this);
 }
 
-AbstractBehaviour* GameObject::getBehaviour() const
+AbstractBehaviour& GameObject::getBehaviour(const int i) const
 {
-    return _behaviour;
+    return *_behaviours[i];
 }
 
 void GameObject::setParent (GameObject* pParent) {
@@ -171,9 +173,9 @@ void GameObject::rotate(float pAngle, glm::vec3 pAxis)
 void GameObject::update(float pStep)
 {
     //make sure behaviour is updated after worldtransform is set
-	if (_behaviour) {
-		_behaviour->update(pStep);
-	}
+    for (auto& behaviour: _behaviours) {
+        behaviour->update(pStep);
+    }
 
     for (int i = _children.size()-1; i >= 0; --i ) {
         _children[i]->update(pStep);

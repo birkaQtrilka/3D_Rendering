@@ -21,7 +21,7 @@ public:
     float GetCutoffAngleRadians() const;
     float GetInnerCutoffAngleRadians() const;
     glm::vec3 GetDirection() const;
-
+    void SetDirection(glm::vec3 direction);
     ~SpotLight();
 private:
     float _linearAttenuation;
