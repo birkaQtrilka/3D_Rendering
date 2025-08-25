@@ -38,42 +38,42 @@ void Renderer::setClearColor(GLbyte pR, GLbyte pG, GLbyte pB) {
 
 }
 
-void Renderer::render(World* pWorld) {
-	render(pWorld, pWorld, nullptr, pWorld->getMainCamera(), true);
+void Renderer::render(World& pWorld) {
+	render(pWorld, pWorld, nullptr, pWorld.getMainCamera(), true);
 }
 
-void Renderer::render(World* pWorld, GameObject* pGameObject, AbstractMaterial* pMaterial, Camera* pCamera, bool pRecursive)
+void Renderer::render(World& pWorld, GameObject& pGameObject, AbstractMaterial* pMaterial, Camera* pCamera, bool pRecursive)
 {
-	render(pWorld, pGameObject, pMaterial, pGameObject->getWorldTransform(), glm::inverse(pCamera->getWorldTransform()), pCamera->getProjection(), pRecursive);
+	render(pWorld, pGameObject, pMaterial, pGameObject.getWorldTransform(), glm::inverse(pCamera->getWorldTransform()), pCamera->getProjection(), pRecursive);
 }
 
-void Renderer::render(World* pWorld, GameObject* pGameObject, AbstractMaterial* pMaterial, const glm::mat4& pModelMatrix, const glm::mat4& pViewMatrix, const glm::mat4& pProjectionMatrix, bool pRecursive) {
-	renderSelf(pWorld, pGameObject, pMaterial == nullptr?pGameObject->getMaterial():pMaterial, pModelMatrix, pViewMatrix, pProjectionMatrix);
+void Renderer::render(World& pWorld, GameObject& pGameObject, AbstractMaterial* pMaterial, const glm::mat4& pModelMatrix, const glm::mat4& pViewMatrix, const glm::mat4& pProjectionMatrix, bool pRecursive) {
+	renderSelf(pWorld, pGameObject, pMaterial == nullptr?pGameObject.getMaterial():pMaterial, pModelMatrix, pViewMatrix, pProjectionMatrix);
 	if (pRecursive) renderChildren(pWorld, pGameObject, pMaterial, pModelMatrix, pViewMatrix, pProjectionMatrix, pRecursive);
 }
 
-void Renderer::renderSelf(World* pWorld, GameObject* pGameObject, AbstractMaterial* pMaterial, const glm::mat4& pModelMatrix, const glm::mat4& pViewMatrix, const glm::mat4& pProjectionMatrix) {
-	render(pWorld, pGameObject->getMesh(), pMaterial, pModelMatrix, pViewMatrix, pProjectionMatrix);
-	if (debug) renderMeshDebugInfo(pGameObject->getMesh(), pModelMatrix, pViewMatrix, pProjectionMatrix);
+void Renderer::renderSelf(World& pWorld, GameObject& pGameObject, AbstractMaterial* pMaterial, const glm::mat4& pModelMatrix, const glm::mat4& pViewMatrix, const glm::mat4& pProjectionMatrix) {
+	render(pWorld, *pGameObject.getMesh(), pMaterial, pModelMatrix, pViewMatrix, pProjectionMatrix);
+	if (debug) renderMeshDebugInfo(*pGameObject.getMesh(), pModelMatrix, pViewMatrix, pProjectionMatrix);
 }
 
-void Renderer::renderChildren(World* pWorld, GameObject* pGameObject, AbstractMaterial* pMaterial, const glm::mat4& pModelMatrix, const glm::mat4& pViewMatrix, const glm::mat4& pProjectionMatrix, bool pRecursive) {
-	int childCount = pGameObject->getChildCount();
+void Renderer::renderChildren(World& pWorld, GameObject& pGameObject, AbstractMaterial* pMaterial, const glm::mat4& pModelMatrix, const glm::mat4& pViewMatrix, const glm::mat4& pProjectionMatrix, bool pRecursive) {
+	int childCount = pGameObject.getChildCount();
 	if (childCount < 1) return;
 
 	//note that with a loop like this, deleting children during rendering is not a good idea :)
 	GameObject* child = 0;
 	for (int i = 0; i < childCount; i++) {
-		child = pGameObject->getChildAt(i);
-		render(pWorld, child, pMaterial, pModelMatrix * child->getTransform(), pViewMatrix, pProjectionMatrix, pRecursive);
+		child = pGameObject.getChildAt(i);
+		render(pWorld, *child, pMaterial, pModelMatrix * child->getTransform(), pViewMatrix, pProjectionMatrix, pRecursive);
 	}
 }
 
-void Renderer::render(World* pWorld, Mesh* pMesh, AbstractMaterial* pMaterial, const glm::mat4& pModelMatrix, const glm::mat4& pViewMatrix, const glm::mat4& pProjectionMatrix) {
-	if (pMesh != nullptr && pMaterial != nullptr) pMaterial->render(pWorld, pMesh, pModelMatrix, pViewMatrix, pProjectionMatrix);
+void Renderer::render(World& pWorld, Mesh& pMesh, AbstractMaterial* pMaterial, const glm::mat4& pModelMatrix, const glm::mat4& pViewMatrix, const glm::mat4& pProjectionMatrix) {
+	if (pMaterial != nullptr) pMaterial->render(&pWorld, &pMesh, pModelMatrix, pViewMatrix, pProjectionMatrix);
 }
 
-void Renderer::renderMeshDebugInfo(Mesh* pMesh, const glm::mat4& pModelMatrix, const glm::mat4& pViewMatrix, const glm::mat4& pProjectionMatrix) {
-	if (pMesh != nullptr) pMesh->drawDebugInfo(pModelMatrix, pViewMatrix, pProjectionMatrix);
+void Renderer::renderMeshDebugInfo(Mesh& pMesh, const glm::mat4& pModelMatrix, const glm::mat4& pViewMatrix, const glm::mat4& pProjectionMatrix) {
+	pMesh.drawDebugInfo(pModelMatrix, pViewMatrix, pProjectionMatrix);
 }
 

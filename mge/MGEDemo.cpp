@@ -39,7 +39,7 @@ void MGEDemo::initialize() {
 
     //setup the custom part so we can display some text
 	std::cout << "Initializing HUD" << std::endl;
-	_hud = new DebugHud(_window);
+	_hud = new DebugHud(*_window);
 	std::cout << "HUD initialized." << std::endl << std::endl;
 }
 

@@ -4,17 +4,14 @@
 #include "Renderer.hpp"
 #include "World.hpp"
 
-AbstractGame::AbstractGame():_window(NULL),_renderer(NULL),_world(NULL), _fps(0)
+AbstractGame::AbstractGame(): _fps(0)
 {
     //ctor
 }
 
 AbstractGame::~AbstractGame()
 {
-    //dtor
-    delete _window;
-    delete _renderer;
-    delete _world;
+
 }
 
 void AbstractGame::initialize() {
@@ -32,7 +29,7 @@ void AbstractGame::initialize() {
 
 void AbstractGame::_initializeWindow() {
 	std::cout << "Initializing window..." << std::endl;
-	_window = new sf::RenderWindow( sf::VideoMode(800,600), "My Game!", sf::Style::Default, sf::ContextSettings(24,8,0,3,3));
+	_window = std::make_unique<sf::RenderWindow>( sf::VideoMode(800,600), "My Game!", sf::Style::Default, sf::ContextSettings(24,8,0,3,3));
 	//_window->setVerticalSyncEnabled(true);
     std::cout << "Window initialized." << std::endl << std::endl;
 }
@@ -69,7 +66,7 @@ void AbstractGame::_initializeGlew() {
 void AbstractGame::_initializeRenderer() {
     //setup our own renderer
 	std::cout << "Initializing renderer..." << std::endl;
-	_renderer = new Renderer();
+	_renderer = std::make_unique<Renderer>();
     _renderer->setClearColor(255,0,0);
     std::cout << "Renderer done." << std::endl << std::endl;
 }
@@ -77,7 +74,7 @@ void AbstractGame::_initializeRenderer() {
 void AbstractGame::_initializeWorld() {
     //setup the world
 	std::cout << "Initializing world..." << std::endl;
-	_world = new World();
+	_world = std::make_unique<World>();
     std::cout << "World initialized." << std::endl << std::endl;
 }
 
@@ -114,7 +111,7 @@ void AbstractGame::run()
             frameCount++;
             timeSinceLastFPSCalculation += renderClock.restart().asSeconds();
             if (timeSinceLastFPSCalculation > 1) {
-                _fps = frameCount/timeSinceLastFPSCalculation;
+                _fps = frameCount / timeSinceLastFPSCalculation;
                 timeSinceLastFPSCalculation -= 1;
                 frameCount = 0;
             }
@@ -131,7 +128,7 @@ void AbstractGame::_update(float pStep) {
 }
 
 void AbstractGame::_render () {
-    _renderer->render(_world);
+    _renderer->render(*_world);
 }
 
 void AbstractGame::_processEvents()
